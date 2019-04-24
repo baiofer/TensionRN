@@ -10,7 +10,7 @@ export default class LogoImage extends Component {
         return(
             <Image
                 source={ require('../resources/Logo.png') }
-                style={{ width: Dimensions.get('window').width - 20, height: 100, marginBottom: 20 }}
+                style={{ width: Dimensions.get('window').width - 20, height: 250, marginBottom: 20 }}
                 resizeMode='contain'
             >
             </Image>

@@ -2,7 +2,10 @@
 import React, { Component } from 'react'
 
 //React Native imports
-import { StyleSheet, View, Text, Alert } from 'react-native'
+import { AsyncStorage, StyleSheet, View, Text, Alert } from 'react-native'
+
+//React Native Router Flux imports
+import { Actions } from 'react-native-router-flux'
 
 //Components imports
 import BackgroundImage from '../components/BackgroundImage'
@@ -45,13 +48,16 @@ export default class Register extends Component {
                     Alert.alert(
                         'Usuario creado en Firebase', 
                         user)
-                    //Crear usuario en WP
-                    const person = {
-                        email: user,
-                        username: user,
-                        password: password,
-                    }
-                    this.postWPPerson(person)
+                    //Save userLogged
+                    AsyncStorage.setItem('userLogged', username)
+                    .catch( (error) => {
+                        if (this._isMounted) {
+                            this.setState({
+                                loaded: true,
+                            })
+                        }
+                        console.log('Error saving userLogged. ', error)
+                    })    
                 })
                 .catch( (error) => {
                     if (error.message === 'The email address is already in use by another account.') {
@@ -134,7 +140,8 @@ export default class Register extends Component {
     }
 
     login() {
-        return( <SignIn /> )
+        Actions.pop()
+        //Actions.SignIn()
     }
 
     //Renders
@@ -162,7 +169,7 @@ export default class Register extends Component {
                         onChangeText={ (v) => this.setState({ repeatPassword: v })}
                     />
                     <AppButton
-                        bgColor='#830F52'
+                        bgColor='#3594c5'
                         onPress={ () => this.register()}
                         label='REGISTRO'
                         labelColor='#BEBBBB'
@@ -171,7 +178,7 @@ export default class Register extends Component {
                     />
                     <View style={{ flexDirection: 'row' }}>
                         <Text 
-                            style={{ color: '#830F52' }}
+                            style={{ color: '#3594c5' }}
                         >
                             Ya tienes una cuenta?
                         </Text>
@@ -179,7 +186,7 @@ export default class Register extends Component {
                             bgColor='transparent'
                             onPress={ () => this.login() }
                             label='Iniciar Sesión'
-                            labelColor='#830F52'
+                            labelColor='#3594c5'
                             setWidth={ 100 }
                             buttonStyle={ styles.loginStyle}
                         />

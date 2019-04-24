@@ -4,12 +4,14 @@ import React, { Component } from 'react'
 //React Native imports
 import { AsyncStorage, StyleSheet, View, Text, Alert } from 'react-native'
 
+//React Native Router Flux imports
+import { Actions } from 'react-native-router-flux'
+
 //Components imports
 import BackgroundImage from '../components/BackgroundImage'
 import AppButton from '../components/AppButton'
 import AppInput from '../components/AppInput'
 import LogoImage from '../components/LogoImage'
-import Register from './Register'
 import Preloader from '../components/Preloader'
 
 //Imports from Firebase
@@ -46,13 +48,6 @@ export default class SignIn extends Component {
     }
 
     //Functions
-    /*
-    testEmail(email) {
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-        return reg.test(email) === 0
-    }
-    */
-
     validateForm() {
         let valid = true
         let errors = {}
@@ -118,7 +113,7 @@ export default class SignIn extends Component {
                         }
                         console.log('Error saving userLogged. ', error)
                     })
-                    Actions.Inicio()
+                    Actions.TomaTension()
                 })
                 .catch( (error) => {
                     if (this._isMounted) {
@@ -134,7 +129,8 @@ export default class SignIn extends Component {
     }
 
     register() {
-        return( <Register /> )
+        //Actions.pop()
+        Actions.Register()
     }
 
     //Renders
@@ -162,7 +158,7 @@ export default class SignIn extends Component {
                         isPassword={ true }
                     />
                     <AppButton
-                        bgColor='#830F52'
+                        bgColor='#3594c5'
                         onPress={ () => this.login() }
                         label='ENTRAR'
                         labelColor='#BEBBBB'
@@ -172,7 +168,7 @@ export default class SignIn extends Component {
                     <View style={ styles.container }>
                         <View style={{ flexDirection: 'row' }}>
                             <Text 
-                                style={{ color: '#830F52' }}
+                                style={{ color: '#3594c5' }}
                             >
                                 ¿No tienes una cuenta?
                             </Text>
@@ -180,7 +176,7 @@ export default class SignIn extends Component {
                                 bgColor='transparent'
                                 onPress={ () => this.register() }
                                 label='Regístrate'
-                                labelColor='#830F52'
+                                labelColor='#3594c5'
                                 setWidth={ 100 }
                                 buttonStyle={ styles.registerStyle}
                             />
