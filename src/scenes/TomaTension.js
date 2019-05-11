@@ -8,7 +8,7 @@ import { StyleSheet, View, Text, Dimensions, Alert, ScrollView } from 'react-nat
 import BackgroundImage from '../components/BackgroundImage'
 import DatosToma from '../components/DatosToma'
 import AppButton from '../components/AppButton'
-import AppInput from '../components/AppInput'
+import InputDate from '../components/InputDate'
 import Moment from 'moment'
 
 //React Native Router Flux imports
@@ -19,7 +19,6 @@ import * as firebase from 'firebase'
 
 
 export default class Perfil extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -38,16 +37,20 @@ export default class Perfil extends Component {
             hayDatos: false,
             fechaHoy: Moment().format('DD-MM-YYYY'),
             fechaHoyError: '',
+            nueva: false,
+            renders: 0
         }
     }
     //Functions
     aceptar() {
         const toma = this.calculateMedia()
-        Alert.alert(
-            'TOMA A GUARDAR',
-            'Fecha: ' +toma.fecha + '\n'+ 'Alta: ' + toma.alta + '\n' + 'Baja: ' + toma.baja  + '\n' + 'Pulso: ' + toma.pulso,
-            [ {text: 'OK', onPress: () => this.guardaToma(toma)} ]
-        )
+        if (toma) {
+            Alert.alert(
+                'TOMA A GUARDAR',
+                'Fecha: ' +toma.fecha + '\n'+ 'Alta: ' + toma.alta + '\n' + 'Baja: ' + toma.baja  + '\n' + 'Pulso: ' + toma.pulso,
+                [ {text: 'OK', onPress: () => this.guardaToma(toma)}, {text: 'Cancel', onPress: () => this.nuevaToma() } ]
+            )
+        } 
     }
 
     toma1(alta, baja, pulso) {
@@ -107,6 +110,33 @@ export default class Perfil extends Component {
         firebase.database().ref(userId +'/tomas/' + toma.fecha).set(toma)
     }
 
+    nuevaToma() {
+        const rend = this.state.renders + 1
+        this.setState({
+            alta1: '0',
+            alta2: '0',
+            alta3: '0',
+            altaMedia: '0',
+            baja1: '0',
+            baja2: '0',
+            baja3: '0',
+            bajaMedia: '0',
+            pulso1: '0',
+            pulso2: '0',
+            pulso3: '0',
+            pulsoMedia: '0',
+            hayDatos: false,
+            fechaHoy: Moment().format('DD-MM-YYYY'),
+            fechaHoyError: '',
+            nueva: true,
+            renders: rend
+        })
+        Alert.alert(
+            'NUEVA TOMA',
+            'Inicializamos todos los valores',
+        )
+    }
+
     //Renders
     renderMedia() {
         if (!this.state.hayDatos) return null
@@ -130,26 +160,38 @@ export default class Perfil extends Component {
         )
     }
 
+    renderNueva() {
+        if (this.state.nueva) {
+            return (
+                <Text>{ this.state.renders }</Text>
+            )
+        } else {
+            return null
+        }
+    }
+
     render() {
-        const fechaHoy = Moment().format('DD-MM-YYYY')
         return(
             <BackgroundImage source={ require('../../resources/Background_Image.png') }>
                 <ScrollView style={ styles.container }>
-                <AppInput 
-                    //placeholder= { fechaHoy }
-                    value={ this.state.fechaHoy }
-                    error={ this.state.fechaError }
-                    onChangeText={ (v) => this.setState({ fechaHoy: v })}
-                    inputStyle={{ width: (Dimensions.get('window').width - 20), marginRight: 10 }}
-                    //label='Alta'
-                    //labelStyle={{ color: '#3594c5' }}
-                />
+                    <InputDate 
+                        styleInputDate={ styles.inputDateStyle }
+                        onAccept= { (date) => {
+                            this.setState({
+                                fechaHoy: date
+                            })
+                        }}
+                        dateToShow={ this.state.fechaHoy }
+                    />
                     <Text style={ styles.textStyle }>
                         Toma 1
                     </Text>
                     <DatosToma 
                         onAccept={ (alta, baja, pulso) => this.toma1(alta, baja, pulso) }
                         styleToma={ styles.datosStyle }
+                        alta={ (this.state.alta1 != 0) ? this.state.alta1 : '' }
+                        baja={ (this.state.baja1 != 0) ? this.state.baja1 : '' }
+                        pulso={ (this.state.pulso1 != 0) ? this.state.pulso1 : '' }
                     />
                     <Text style={ styles.textStyle }>Toma 2</Text>
                     <DatosToma 
@@ -162,14 +204,29 @@ export default class Perfil extends Component {
                         onAccept={ (alta, baja, pulso) => this.toma3(alta, baja, pulso) }
                     />
                     { this.renderMedia() }
-                    <AppButton
-                        bgColor='#3594c5'
-                        onPress={ () => this.aceptar() }
-                        label='Aceptar'
-                        labelColor='#575959'
-                        //iconColor='#BEBBBB'
-                        buttonStyle={ styles.loginButton }
-                    /> 
+                    <View style={ styles.buttonsStyle }>
+                        <AppButton
+                            bgColor='#3594c5'
+                            onPress={ () => this.aceptar() }
+                            label='Aceptar'
+                            labelColor='#575959'
+                            iconName='check'
+                            iconSize={ 20 }
+                            iconColor='#575959'
+                            buttonStyle={ styles.loginButton }
+                        />
+                        <AppButton
+                            bgColor='#3594c5'
+                            onPress={ () => this.nuevaToma() }
+                            label='Nueva toma'
+                            labelColor='#575959'
+                            iconName='plus'
+                            iconSize={ 20 }
+                            iconColor='#575959'
+                            buttonStyle={ styles.loginButton }
+                        />
+                    </View>
+                    { /*this.renderNueva()*/ }
                 </ScrollView>
             </BackgroundImage>
         )
@@ -196,7 +253,8 @@ const styles = StyleSheet.create({
     },
     loginButton: {
         marginBottom: 20,
-        marginLeft: 10
+        marginLeft: 10,
+        width: (Dimensions.get('window').width - 40) / 2,
     },
     labelStyle: {
         //backgroundColor: '#BEBBBB',
@@ -218,5 +276,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         //marginTop: 20,
         //marginBottom: 30
-      },
+    },
+    buttonsStyle: {
+        flexDirection: 'row',
+    },
+    inputDateStyle: {
+        marginLeft: 20,
+    }
 });

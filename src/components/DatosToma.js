@@ -19,23 +19,30 @@ export default class DatosToma extends Component {
 
     static propTypes = {
         onAccept: PropTypes.func,
-        styleToma: PropTypes.object
+        styleToma: PropTypes.object,
+        alta: PropTypes.string,
+        baja: PropTypes.string,
+        pulso: PropTypes.string,
     }
 
     static defaultProps = {
         onAccept: () => {},
         styleToma: {},
+        alta: '',
+        baja: '',
+        pulso: '',
     }
 
     constructor(props) {
         super(props)
         this.state = {
-            alta: '0',
+            alta: this.props.alta,
             altaError: '',
-            baja: '0',
+            baja: this.props.baja,
             bajaError: '',
-            pulso: '0',
+            pulso: this.props.pulso,
             pulsoError: '',
+            selected: false,
         }
     }
 
@@ -43,15 +50,15 @@ export default class DatosToma extends Component {
     validateForm() {
         let valid = true
         let errors = {}
-        if (this.state.alta === '0') {
+        if (!this.state.alta || this.state.alta === '0') {
             errors.alta = 'Alta'
             valid = false
         }
-        if (this.state.baja === '0') {
+        if (!this.state.baja || this.state.baja === '0') {
             errors.baja = 'Baja'
             valid = false
         }
-        if (this.state.pulso === '0') {
+        if (!this.state.pulso || this.state.pulso === '0') {
             errors.pulso = 'Pulso'
             valid = false
         }
@@ -94,6 +101,9 @@ export default class DatosToma extends Component {
     cogerDatos() {
         if (this.validateForm()) {
             const { alta, baja, pulso } = this.state
+            this.setState({
+                selected: true,
+            })
             this.props.onAccept(alta, baja, pulso)
         }
     }
@@ -101,10 +111,12 @@ export default class DatosToma extends Component {
     //RENDER
     render() {
         const { styleToma } = this.props
+        const { selected } = this.state
+        const iconColorOK = selected ? iconColor='green' : iconColor='grey'
         return (
             <View style={ [styles.container, styleToma] }>
                 <AppInput 
-                    placeholder= 'Alta'
+                    placeholder= '0'
                     value={ this.state.alta }
                     error={ this.state.altaError }
                     onChangeText={ (v) => this.setState({ alta: v })}
@@ -113,7 +125,7 @@ export default class DatosToma extends Component {
                     labelStyle={{ color: '#3594c5' }}
                 />
                 <AppInput 
-                    placeholder= 'Baja'
+                    placeholder= '0'
                     value={ this.state.baja }
                     error={ this.state.bajaError }
                     onChangeText={ (v) => this.setState({ baja: v })}
@@ -122,7 +134,7 @@ export default class DatosToma extends Component {
                     labelStyle={{ color: '#3594c5' }}
                 />
                 <AppInput 
-                    placeholder= 'Pulsaciones'
+                    placeholder= '0'
                     value={ this.state.pulso }
                     error={ this.state.pulsoError }
                     onChangeText={ (v) => this.setState({ pulso: v })}
@@ -131,11 +143,12 @@ export default class DatosToma extends Component {
                     labelStyle={{ color: '#3594c5' }}
                 />
                 <AppButton
-                        bgColor='#3594c5'
+                        bgColor='transparent'
                         onPress={ () => this.cogerDatos() }
-                        label='OK'
-                        labelColor='#575959'
-                        //iconColor='#4c9ace'
+                        label=''
+                        iconName='check'
+                        iconSize={ 30 }
+                        iconColor={ iconColorOK }
                         buttonStyle={ styles.loginButton }
                     /> 
             </View>
@@ -149,8 +162,8 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 20,
-      marginBottom: 30
+      marginTop: 10,
+      marginBottom: 20
     },
     loginButton: {
         width: 50,

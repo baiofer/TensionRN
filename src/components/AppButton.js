@@ -23,6 +23,7 @@ export default class AppButton extends Component {
         onPress: PropTypes.func,
         buttonStyle: PropTypes.object,
         fontSize: PropTypes.number,
+        iconSize: PropTypes.number,
     }
 
     static defaultProps = {
@@ -31,6 +32,7 @@ export default class AppButton extends Component {
         labelColor: 'black',
         onPress: () => {},
         fontSize: 15,
+        iconSize: 15,
     }
 
     _onPress() {
@@ -38,8 +40,41 @@ export default class AppButton extends Component {
     }
 
     //RENDER
+    renderLabel() {
+        const { label, labelColor, fontSize } = this.props
+        if (this.props.label === 'Button') {
+            return null
+        } else {
+            return (
+                <Text 
+                    style={{
+                        color: labelColor,
+                        fontSize: fontSize,
+                        marginLeft: 10 }}
+                >
+                    { label }
+                </Text>
+            )
+        }
+    }
+
+    renderIcon() {
+        const { iconName, iconSize, iconColor } = this.props
+        if (iconName) {
+            return (
+                <Icon
+					name={ iconName }
+					size={ iconSize }
+					color={ iconColor }
+                /> 
+            )
+        } else {
+            return null
+        }
+    }
+
     render() {
-        const { bgColor, onPress, label, labelColor, setWidth, iconName, iconColor, buttonStyle, fontSize } = this.props
+        const { bgColor, onPress, label, labelColor, setWidth, iconName, iconColor, buttonStyle, fontSize, iconSize } = this.props
         const width = !setWidth ? Dimensions.get('window').width - 20 : setWidth
         return (
             <TouchableOpacity 
@@ -61,19 +96,8 @@ export default class AppButton extends Component {
                     style={{ 
                         flexDirection: 'row', justifyContent: 'space-between' }}
                 >
-                    <Icon
-					    name={ iconName }
-					    size={ 15 }
-					    color={ iconColor }
-                    />   
-                    <Text 
-                        style={{
-                            color: labelColor,
-                            fontSize: fontSize,
-                            marginLeft: 10 }}
-                    >
-                        { label }
-                    </Text>
+                    { this.renderIcon() }  
+                    { this.renderLabel() }
                 </View>            
             </TouchableOpacity>
         )
