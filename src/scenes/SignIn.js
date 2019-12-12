@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 
 //React Native imports
-import { AsyncStorage, StyleSheet, View, Text, Alert } from 'react-native'
+import { AsyncStorage, StyleSheet, View, Text, Alert, KeyboardAvoidingView } from 'react-native'
 
 //React Native Router Flux imports
 import { Actions } from 'react-native-router-flux'
@@ -140,7 +140,10 @@ export default class SignIn extends Component {
         }
         return(
             <BackgroundImage source={ require('../resources/Background_Image.png') }>
-                <View style={ styles.container }>
+                <KeyboardAvoidingView 
+                    style={ styles.container }
+                    behavior='padding'
+                >
                     <View style={{ marginTop: 50 }}>
                         <LogoImage />
                     </View>
@@ -182,7 +185,7 @@ export default class SignIn extends Component {
                             />
                         </View>
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </BackgroundImage>
         )
     }

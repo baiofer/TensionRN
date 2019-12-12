@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 
 //React Native imports
-import { AsyncStorage, StyleSheet, View, Text, Alert } from 'react-native'
+import { AsyncStorage, StyleSheet, View, Text, Alert, KeyboardAvoidingView } from 'react-native'
 
 //React Native Router Flux imports
 import { Actions } from 'react-native-router-flux'
@@ -148,7 +148,10 @@ export default class Register extends Component {
     render() {
         return(
             <BackgroundImage source={ require('../resources/Background_Image.png') }>
-                <View style={ styles.container }>
+                <KeyboardAvoidingView 
+                    style={ styles.container }
+                    behavior='padding'
+                >
                     <LogoImage />
                     <AppInput 
                         placeholder= 'Email'
@@ -191,7 +194,7 @@ export default class Register extends Component {
                             buttonStyle={ styles.loginStyle}
                         />
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </BackgroundImage>
         )
     }

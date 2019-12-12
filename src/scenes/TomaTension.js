@@ -2,7 +2,9 @@
 import React, { Component } from 'react'
 
 //React Native imports
-import { StyleSheet, View, Text, Dimensions, Alert, ScrollView } from 'react-native'
+import { StyleSheet, View, Text, Dimensions, Alert, ScrollView, KeyboardAvoidingView } from 'react-native'
+
+//Nativebase imports
 
 //Components imports
 import BackgroundImage from '../components/BackgroundImage'
@@ -173,61 +175,67 @@ export default class Perfil extends Component {
     render() {
         return(
             <BackgroundImage source={ require('../../resources/Background_Image.png') }>
-                <ScrollView style={ styles.container }>
-                    <InputDate 
-                        styleInputDate={ styles.inputDateStyle }
-                        onAccept= { (date) => {
-                            this.setState({
-                                fechaHoy: date
-                            })
-                        }}
-                        dateToShow={ this.state.fechaHoy }
-                    />
-                    <Text style={ styles.textStyle }>
-                        Toma 1
-                    </Text>
-                    <DatosToma 
-                        onAccept={ (alta, baja, pulso) => this.toma1(alta, baja, pulso) }
-                        styleToma={ styles.datosStyle }
-                        alta={ (this.state.alta1 != 0) ? this.state.alta1 : '' }
-                        baja={ (this.state.baja1 != 0) ? this.state.baja1 : '' }
-                        pulso={ (this.state.pulso1 != 0) ? this.state.pulso1 : '' }
-                    />
-                    <Text style={ styles.textStyle }>Toma 2</Text>
-                    <DatosToma 
-                        styleToma={ styles.datosStyle }
-                        onAccept={ (alta, baja, pulso) => this.toma2(alta, baja, pulso) }
-                    />
-                    <Text style={ styles.textStyle }>Toma 3</Text>
-                    <DatosToma 
-                        styleToma={ styles.datosStyle }
-                        onAccept={ (alta, baja, pulso) => this.toma3(alta, baja, pulso) }
-                    />
-                    { this.renderMedia() }
-                    <View style={ styles.buttonsStyle }>
-                        <AppButton
-                            bgColor='#3594c5'
-                            onPress={ () => this.aceptar() }
-                            label='Aceptar'
-                            labelColor='#575959'
-                            iconName='check'
-                            iconSize={ 20 }
-                            iconColor='#575959'
-                            buttonStyle={ styles.loginButton }
+                <KeyboardAvoidingView 
+                    style={ styles.container}
+                    behavior='padding'
+                >
+                    <ScrollView //style={ styles.container }
+                    >
+                        <InputDate 
+                            styleInputDate={ styles.inputDateStyle }
+                            onAccept= { (date) => {
+                                this.setState({
+                                    fechaHoy: date
+                                })
+                            }}
+                            dateToShow={ this.state.fechaHoy }
                         />
-                        <AppButton
-                            bgColor='#3594c5'
-                            onPress={ () => this.nuevaToma() }
-                            label='Nueva toma'
-                            labelColor='#575959'
-                            iconName='plus'
-                            iconSize={ 20 }
-                            iconColor='#575959'
-                            buttonStyle={ styles.loginButton }
+                        <Text style={ styles.textStyle }>
+                            Toma 1
+                        </Text>
+                        <DatosToma 
+                            onAccept={ (alta, baja, pulso) => this.toma1(alta, baja, pulso) }
+                            styleToma={ styles.datosStyle }
+                            alta={ (this.state.alta1 != 0) ? this.state.alta1 : '' }
+                            baja={ (this.state.baja1 != 0) ? this.state.baja1 : '' }
+                            pulso={ (this.state.pulso1 != 0) ? this.state.pulso1 : '' }
                         />
-                    </View>
-                    { /*this.renderNueva()*/ }
-                </ScrollView>
+                        <Text style={ styles.textStyle }>Toma 2</Text>
+                        <DatosToma 
+                            styleToma={ styles.datosStyle }
+                            onAccept={ (alta, baja, pulso) => this.toma2(alta, baja, pulso) }
+                        />
+                        <Text style={ styles.textStyle }>Toma 3</Text>
+                        <DatosToma 
+                            styleToma={ styles.datosStyle }
+                            onAccept={ (alta, baja, pulso) => this.toma3(alta, baja, pulso) }
+                        />
+                        { this.renderMedia() }
+                        <View style={ styles.buttonsStyle }>
+                            <AppButton
+                                bgColor='#3594c5'
+                                onPress={ () => this.aceptar() }
+                                label='Aceptar'
+                                labelColor='#575959'
+                                iconName='check'
+                                iconSize={ 20 }
+                                iconColor='#575959'
+                                buttonStyle={ styles.loginButton }
+                            />
+                            <AppButton
+                                bgColor='#3594c5'
+                                onPress={ () => this.nuevaToma() }
+                                label='Nueva toma'
+                                labelColor='#575959'
+                                iconName='plus'
+                                iconSize={ 20 }
+                                iconColor='#575959'
+                                buttonStyle={ styles.loginButton }
+                            />
+                        </View>
+                        { /*this.renderNueva()*/ }
+                    </ScrollView>
+                </KeyboardAvoidingView>
             </BackgroundImage>
         )
     }

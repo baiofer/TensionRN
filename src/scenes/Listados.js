@@ -26,14 +26,14 @@ export default class Listados extends Component {
             tomas: [],
         }
     }
-
     //Life cycle
     componentDidMount() {
         //Leer datos de Firebase
         const userId = firebase.auth().currentUser.uid
-        firebase.database().ref(userId +'/tomas/').orderByChild('fecha').startAt('20-04-2019').endAt('24-04`19').once('value')
+        firebase.database().ref(userId +'/tomas').once('value')
             .then( (snapshot) => {                
                 const tomasReaded = snapshot.val()
+                console.log('Datos: ', tomasReaded)
                 const tomas = Object.keys(tomasReaded)
                     .map( (key) => {
                         return tomasReaded[key]
@@ -43,6 +43,24 @@ export default class Listados extends Component {
                 })
             })
     }
+    /*
+    componentDidMount() {
+        //Leer datos de Firebase
+        const userId = firebase.auth().currentUser.uid
+        firebase.database().ref(userId +'/tomas/').orderByChild('fecha').startAt('20-04-2019').endAt('24-04`20').once('value')
+            .then( (snapshot) => {                
+                const tomasReaded = snapshot.val()
+                console.log('Datos: ', tomasReaded)
+                const tomas = Object.keys(tomasReaded)
+                    .map( (key) => {
+                        return tomasReaded[key]
+                    })
+                this.setState({
+                    tomas: tomas,
+                })
+            })
+    }
+    */
     //Functions
 
     //Renders
